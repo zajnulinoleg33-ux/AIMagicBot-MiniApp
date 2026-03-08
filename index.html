@@ -4,20 +4,68 @@
   <meta charset="UTF-8">
   <title>Пополнение AIMagicBot</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    button { font-size: 18px; padding: 10px 20px; margin: 10px; cursor: pointer; }
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
+    button { font-size: 18px; padding: 10px 20px; margin: 8px; cursor: pointer; }
+    input { font-size: 16px; padding: 5px; width: 60px; text-align: center; }
+    h2 { margin-bottom: 20px; }
   </style>
 </head>
 <body>
   <h2>Пополнение баланса AIMagicBot</h2>
-  <p>Нажми кнопку, чтобы купить 1 кредит через Telegram Stars</p>
+
+  <!-- Кнопка бесплатного пробного запроса -->
+  <button id="free_trial">🎁 Попробовать бесплатно</button>
+  <br>
+
+  <!-- Кнопки популярных вариантов -->
   <button id="buy1">⭐ Купить 1 кредит</button>
+  <button id="buy5">⭐ Купить 5 кредитов</button>
+  <button id="buy10">⭐ Купить 10 кредитов</button>
+  <br>
+
+  <!-- Поле для произвольного количества -->
+  <input type="number" id="creditAmount" value="1" min="1" max="100">
+  <button id="buyCustom">⭐ Купить выбранное количество</button>
+
+  <!-- Кнопка VIP -->
+  <br>
+  <button id="vip">💎 Купить VIP-подписку</button>
 
   <script>
     const tg = window.Telegram.WebApp;
+
+    // Бесплатный пробный запрос
+    document.getElementById('free_trial').onclick = function() {
+      tg.sendData(JSON.stringify({ action: "free_trial", amount: 1 }));
+      alert("Вы активировали бесплатный пробный запрос!");
+    };
+
+    // Покупка популярных вариантов
     document.getElementById('buy1').onclick = function() {
       tg.sendData(JSON.stringify({ action: "buy_credit", amount: 1 }));
-      alert("Данные отправлены боту. После оплаты кредиты будут зачислены.");
+      alert("1 кредит отправлен боту.");
+    };
+    document.getElementById('buy5').onclick = function() {
+      tg.sendData(JSON.stringify({ action: "buy_credit", amount: 5 }));
+      alert("5 кредитов отправлено боту.");
+    };
+    document.getElementById('buy10').onclick = function() {
+      tg.sendData(JSON.stringify({ action: "buy_credit", amount: 10 }));
+      alert("10 кредитов отправлено боту.");
+    };
+
+    // Покупка произвольного количества
+    document.getElementById('buyCustom').onclick = function() {
+      const amount = parseInt(document.getElementById('creditAmount').value);
+      if(amount < 1) { alert("Введите корректное количество."); return; }
+      tg.sendData(JSON.stringify({ action: "buy_credit", amount }));
+      alert(`${amount} кредитов отправлено боту.`);
+    };
+
+    // VIP-подписка
+    document.getElementById('vip').onclick = function() {
+      tg.sendData(JSON.stringify({ action: "vip_subscription" }));
+      alert("Запрос на покупку VIP отправлен боту.");
     };
   </script>
 </body>

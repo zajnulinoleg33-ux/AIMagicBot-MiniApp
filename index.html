@@ -1,72 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Пополнение AIMagicBot</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
-    button { font-size: 18px; padding: 10px 20px; margin: 8px; cursor: pointer; }
-    input { font-size: 16px; padding: 5px; width: 60px; text-align: center; }
-    h2 { margin-bottom: 20px; }
-  </style>
+<meta charset="UTF-8">
+<title>AIMagicBot</title>
+
+<style>
+body{
+font-family: Arial, sans-serif;
+background:#f4f6f8;
+margin:0;
+padding:20px;
+text-align:center;
+}
+
+h1{
+margin-bottom:5px;
+}
+
+.balance{
+background:white;
+padding:12px;
+border-radius:12px;
+margin-bottom:20px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+font-size:18px;
+}
+
+.container{
+display:grid;
+grid-template-columns:1fr;
+gap:15px;
+max-width:400px;
+margin:auto;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:16px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card h3{
+margin:5px 0;
+}
+
+.card p{
+color:#666;
+}
+
+.card button{
+margin-top:10px;
+padding:10px 18px;
+border:none;
+border-radius:10px;
+font-size:16px;
+background:#2AABEE;
+color:white;
+cursor:pointer;
+}
+
+.popular{
+border:2px solid gold;
+}
+
+.free{
+border:2px solid #2ecc71;
+}
+
+.vip{
+border:2px solid #9b59b6;
+}
+
+</style>
 </head>
+
 <body>
-  <h2>Пополнение баланса AIMagicBot</h2>
 
-  <!-- Кнопка бесплатного пробного запроса -->
-  <button id="free_trial">🎁 Попробовать бесплатно</button>
-  <br>
+<h1>AIMagicBot</h1>
+<p>Твой AI помощник</p>
 
-  <!-- Кнопки популярных вариантов -->
-  <button id="buy1">⭐ Купить 1 кредит</button>
-  <button id="buy5">⭐ Купить 5 кредитов</button>
-  <button id="buy10">⭐ Купить 10 кредитов</button>
-  <br>
+<div class="balance">
+💰 Ваш баланс: <span id="balance">0</span> кредитов
+</div>
 
-  <!-- Поле для произвольного количества -->
-  <input type="number" id="creditAmount" value="1" min="1" max="100">
-  <button id="buyCustom">⭐ Купить выбранное количество</button>
+<div class="container">
 
-  <!-- Кнопка VIP -->
-  <br>
-  <button id="vip">💎 Купить VIP-подписку</button>
+<div class="card free">
+<h3>🎁 Бесплатно</h3>
+<p>Попробуйте возможности AI</p>
+<button onclick="free()">Попробовать</button>
+</div>
 
-  <script>
-    const tg = window.Telegram.WebApp;
+<div class="card">
+<h3>⭐ 1 кредит</h3>
+<p>Для одного запроса</p>
+<button onclick="buy(1)">Купить</button>
+</div>
 
-    // Бесплатный пробный запрос
-    document.getElementById('free_trial').onclick = function() {
-      tg.sendData(JSON.stringify({ action: "free_trial", amount: 1 }));
-      alert("Вы активировали бесплатный пробный запрос!");
-    };
+<div class="card popular">
+<h3>⭐ 5 кредитов</h3>
+<p>Самый популярный тариф</p>
+<button onclick="buy(5)">Купить</button>
+</div>
 
-    // Покупка популярных вариантов
-    document.getElementById('buy1').onclick = function() {
-      tg.sendData(JSON.stringify({ action: "buy_credit", amount: 1 }));
-      alert("1 кредит отправлен боту.");
-    };
-    document.getElementById('buy5').onclick = function() {
-      tg.sendData(JSON.stringify({ action: "buy_credit", amount: 5 }));
-      alert("5 кредитов отправлено боту.");
-    };
-    document.getElementById('buy10').onclick = function() {
-      tg.sendData(JSON.stringify({ action: "buy_credit", amount: 10 }));
-      alert("10 кредитов отправлено боту.");
-    };
+<div class="card">
+<h3>⭐ 10 кредитов</h3>
+<p>Лучшее соотношение цены</p>
+<button onclick="buy(10)">Купить</button>
+</div>
 
-    // Покупка произвольного количества
-    document.getElementById('buyCustom').onclick = function() {
-      const amount = parseInt(document.getElementById('creditAmount').value);
-      if(amount < 1) { alert("Введите корректное количество."); return; }
-      tg.sendData(JSON.stringify({ action: "buy_credit", amount }));
-      alert(`${amount} кредитов отправлено боту.`);
-    };
+<div class="card vip">
+<h3>💎 VIP</h3>
+<p>Безлимитный доступ</p>
+<button onclick="vip()">Купить VIP</button>
+</div>
 
-    // VIP-подписка
-    document.getElementById('vip').onclick = function() {
-      tg.sendData(JSON.stringify({ action: "vip_subscription" }));
-      alert("Запрос на покупку VIP отправлен боту.");
-    };
-  </script>
+</div>
+
+<script>
+
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+function free(){
+tg.sendData(JSON.stringify({action:"free_trial"}));
+}
+
+function buy(amount){
+tg.sendData(JSON.stringify({action:"buy_credit", amount:amount}));
+}
+
+function vip(){
+tg.sendData(JSON.stringify({action:"vip"}));
+}
+
+</script>
+
 </body>
 </html>

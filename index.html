@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Пополнение AIMagicBot</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    button { font-size: 18px; padding: 10px 20px; margin: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Пополнение баланса AIMagicBot</h2>
+  <p>Нажми кнопку, чтобы купить 1 кредит через Telegram Stars</p>
+  <button id="buy1">⭐ Купить 1 кредит</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    document.getElementById('buy1').onclick = function() {
+      tg.sendData(JSON.stringify({ action: "buy_credit", amount: 1 }));
+      alert("Данные отправлены боту. После оплаты кредиты будут зачислены.");
+    };
+  </script>
+</body>
+</html>

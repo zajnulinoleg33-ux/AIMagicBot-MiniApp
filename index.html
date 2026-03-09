@@ -1,141 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>AIMagicBot</title>
-
-<style>
-body{
-font-family: Arial, sans-serif;
-background:#f4f6f8;
-margin:0;
-padding:20px;
-text-align:center;
-}
-
-h1{
-margin-bottom:5px;
-}
-
-.balance{
-background:white;
-padding:12px;
-border-radius:12px;
-margin-bottom:20px;
-box-shadow:0 2px 8px rgba(0,0,0,0.1);
-font-size:18px;
-}
-
-.container{
-display:grid;
-grid-template-columns:1fr;
-gap:15px;
-max-width:400px;
-margin:auto;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:16px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-
-.card h3{
-margin:5px 0;
-}
-
-.card p{
-color:#666;
-}
-
-.card button{
-margin-top:10px;
-padding:10px 18px;
-border:none;
-border-radius:10px;
-font-size:16px;
-background:#2AABEE;
-color:white;
-cursor:pointer;
-}
-
-.popular{
-border:2px solid gold;
-}
-
-.free{
-border:2px solid #2ecc71;
-}
-
-.vip{
-border:2px solid #9b59b6;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <title>AIMagicBot Web App</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1e1e1e; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #menu, #smallMenu { display: none; margin-top: 20px; }
+        button { margin: 5px; padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; cursor: pointer; }
+        #startBtn { background-color: #007bff; color: #fff; }
+        .mainButton { background-color: #333; color: #fff; width: 250px; text-align: left; }
+        .smallButton { background-color: #555; color: #fff; width: 180px; text-align: left; font-size: 14px; }
+    </style>
 </head>
-
 <body>
+    <button id="startBtn">СТАРТ</button>
 
-<h1>AIMagicBot</h1>
-<p>Твой AI помощник</p>
+    <!-- Главное меню -->
+    <div id="menu"></div>
 
-<div class="balance">
-💰 Ваш баланс: <span id="balance">0</span> кредитов
-</div>
+    <!-- Малое меню -->
+    <div id="smallMenu"></div>
 
-<div class="container">
+    <script>
+        // Telegram WebApp объект
+        const tg = window.Telegram.WebApp;
 
-<div class="card free">
-<h3>🎁 Бесплатно</h3>
-<p>Попробуйте возможности AI</p>
-<button onclick="free()">Попробовать</button>
-</div>
+        // При загрузке страницы показываем кнопку СТАРТ
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("smallMenu").style.display = "none";
+            document.getElementById("startBtn").style.display = "block";
+        });
 
-<div class="card">
-<h3>⭐ 1 кредит</h3>
-<p>Для одного запроса</p>
-<button onclick="buy(1)">Купить</button>
-</div>
+        // Нажатие кнопки СТАРТ
+        document.getElementById("startBtn").addEventListener("click", function() {
+            showMainMenu();
+            this.style.display = "none";
+        });
 
-<div class="card popular">
-<h3>⭐ 5 кредитов</h3>
-<p>Самый популярный тариф</p>
-<button onclick="buy(5)">Купить</button>
-</div>
+        // Функция отображения главного меню
+        function showMainMenu() {
+            const menuDiv = document.getElementById("menu");
+            menuDiv.innerHTML = `
+                <button class="mainButton" onclick="sendAction('chat_gpt')">💬 Чат GPT</button>
+                <button class="mainButton" onclick="sendAction('photo')">🖼 Улучшение фото</button>
+                <button class="mainButton" onclick="sendAction('image')">🌄 Генерация изображений</button>
+                <button class="mainButton" onclick="sendAction('voice')">🎤 Голосовой перевод</button>
+                <button class="mainButton" onclick="sendAction('buy_credits')">💰 Купить кредиты</button>
+                <button class="mainButton" onclick="sendAction('bonus')">🎁 Бонусы/рефералы</button>
+                <button class="mainButton" onclick="sendAction('history')">📜 История</button>
+                <button class="mainButton" onclick="sendAction('refund')">⚠️ /refund</button>
+            `;
+            menuDiv.style.display = "block";
+            showSmallMenu();
+        }
 
-<div class="card">
-<h3>⭐ 10 кредитов</h3>
-<p>Лучшее соотношение цены</p>
-<button onclick="buy(10)">Купить</button>
-</div>
+        // Функция отображения малого меню
+        function showSmallMenu() {
+            const smallDiv = document.getElementById("smallMenu");
+            smallDiv.innerHTML = `
+                <button class="smallButton" onclick="sendAction('lang')">/lang — смена языка</button>
+                <button class="smallButton" onclick="sendAction('admin')">/admin — админ-панель</button>
+                <button class="smallButton" onclick="sendAction('limits')">/limits — описание лимитов</button>
+            `;
+            smallDiv.style.display = "block";
+        }
 
-<div class="card vip">
-<h3>💎 VIP</h3>
-<p>Безлимитный доступ</p>
-<button onclick="vip()">Купить VIP</button>
-</div>
-
-</div>
-
-<script>
-
-const tg = window.Telegram.WebApp;
-tg.expand();
-
-function free(){
-tg.sendData(JSON.stringify({action:"free_trial"}));
-}
-
-function buy(amount){
-tg.sendData(JSON.stringify({action:"buy_credit", amount:amount}));
-}
-
-function vip(){
-tg.sendData(JSON.stringify({action:"vip"}));
-}
-
-</script>
-
+        // Отправка действия боту
+        function sendAction(action) {
+            tg.sendData(action);
+        }
+    </script>
 </body>
 </html>
